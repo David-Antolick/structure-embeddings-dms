@@ -1,6 +1,9 @@
 import pandas as pd
 import re
 
+# Data retrieved from:
+#  https://www.mavedb.org/score-sets/urn:mavedb:00000070-a-1
+
 df = pd.read_csv("data/raw/tem1_dms.csv")
 print(df.head())
 
