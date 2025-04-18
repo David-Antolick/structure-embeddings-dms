@@ -1,0 +1,9 @@
+pandas
+regex
+torch
+numpy
+transformers
+Bio
+scikit-learn
+scipy
+matplotlib

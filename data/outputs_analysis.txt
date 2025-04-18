@@ -1,0 +1,4 @@
+[A] Spearman correlation (embedding norm vs score): 0.269, p = 4.308e-250
+[B] Random Forest R² on test set: 0.445
+[C] Spearman correlation (BLOSUM62 vs score): 0.456, p = 0.000e+00
+[C] Random Forest R² with embedding + BLOSUM62: 0.728
