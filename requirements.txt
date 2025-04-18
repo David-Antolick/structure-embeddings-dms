@@ -7,3 +7,4 @@ Bio
 scikit-learn
 scipy
 matplotlib
+seaborn
