@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 from scipy.stats import spearmanr
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
@@ -8,20 +9,20 @@ from sklearn.metrics import r2_score
 from Bio.Align import substitution_matrices
 import os
 
-# === Load data ===
+# Load data
 df = pd.read_csv("data/processed/tem1_dms_embeddings.csv")
 
-# === Extract embedding matrix ===
+# Extract embedding matrix
 embedding_cols = [col for col in df.columns if col.isdigit()]
 X = df[embedding_cols].values
 y = df["score"].values
 
-# === (A) Correlation: L2 norm vs score ===
+# (A) Correlation: L2 norm vs score
 df["embedding_norm"] = np.linalg.norm(X, axis=1)
 corr, pval = spearmanr(df["embedding_norm"], df["score"])
 print(f"[A] Spearman correlation (embedding norm vs score): {corr:.3f}, p = {pval:.3e}")
 
-# === (B) ML Model with embeddings ===
+# (B) ML Model with embeddings
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
 rf_model.fit(X_train, y_train)
@@ -29,7 +30,7 @@ y_pred = rf_model.predict(X_test)
 r2_emb = r2_score(y_test, y_pred)
 print(f"[B] Random Forest R² (embeddings): {r2_emb:.3f}")
 
-# === (C) Add BLOSUM62 substitution score ===
+# (C) Add BLOSUM62 substitution score
 blosum62 = substitution_matrices.load("BLOSUM62")
 
 def get_blosum_score(wt, mut):
@@ -56,12 +57,12 @@ y_pred_c = rf_combo.predict(X_test_c)
 r2_combo = r2_score(y_test_c, y_pred_c)
 print(f"[C] Random Forest R² (embeddings + BLOSUM62): {r2_combo:.3f}")
 
-# === Create plots directory if needed ===
+# Create plots directory
 os.makedirs("plots", exist_ok=True)
 
-# === Plot 1: Embedding norm vs score ===
+# Plot 1: Embedding norm vs score (with regression line)
 plt.figure(figsize=(6, 4))
-plt.scatter(df["embedding_norm"], df["score"], alpha=0.2)
+sns.regplot(x="embedding_norm", y="score", data=df, scatter_kws={'alpha': 0.1})
 plt.xlabel("Embedding L2 Norm")
 plt.ylabel("Mutation Fitness Score")
 plt.title("Embedding Norm vs Mutation Score")
@@ -70,18 +71,31 @@ plt.tight_layout()
 plt.savefig("plots/embedding_norm_vs_score.png", dpi=300)
 plt.close()
 
-# === Plot 2: BLOSUM62 score vs score ===
+# Bonus: Binned average score vs embedding norm
+df["norm_bin"] = pd.cut(df["embedding_norm"], bins=20)
+binned = df.groupby("norm_bin")["score"].mean().reset_index()
 plt.figure(figsize=(6, 4))
-plt.scatter(df["blosum62"], df["score"], alpha=0.2, color="orange")
+sns.barplot(x="norm_bin", y="score", data=binned, color="steelblue")
+plt.xticks(rotation=90)
+plt.xlabel("Binned Embedding Norm")
+plt.ylabel("Avg Mutation Score")
+plt.title("Avg Mutation Score by Embedding Norm Bin")
+plt.tight_layout()
+plt.savefig("plots/embedding_norm_binned_avg.png", dpi=300)
+plt.close()
+
+# Plot 2: BLOSUM62 score vs score (with jitter)
+plt.figure(figsize=(6, 4))
+sns.stripplot(x="blosum62", y="score", data=df, alpha=0.2, jitter=0.25, color="orange")
 plt.xlabel("BLOSUM62 Substitution Score")
 plt.ylabel("Mutation Fitness Score")
 plt.title("BLOSUM62 Score vs Mutation Score")
 plt.grid(True)
 plt.tight_layout()
-plt.savefig("plots/blosum62_vs_score.png", dpi=300)
+plt.savefig("plots/blosum62_vs_score_jittered.png", dpi=300)
 plt.close()
 
-# === Plot 3: R² score comparison ===
+# Plot 3: R² score comparison
 plt.figure(figsize=(6, 4))
 bars = ["ESM Embeddings", "BLOSUM62 Only", "Embeddings + BLOSUM62"]
 r2_scores = [r2_emb, 0, r2_combo]
