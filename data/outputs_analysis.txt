@@ -2,3 +2,20 @@
 [B] Random Forest R² (embeddings): 0.485
 [C] Spearman correlation (BLOSUM62 vs score): 0.463, p = 0.000e+00
 [C] Random Forest R² (embeddings + BLOSUM62): 0.743
+
+
+                             mutant  mut_pos   rmsd_CA  plddt_mut
+0  mut_A132R_score0001_66d76.result      132  0.167574      96.81
+1  mut_A222V_score1000_ad2e8.result      222  0.137296      98.19
+2   mut_F58N_score3111_f1932.result       58  0.130613      98.44
+3  mut_L146D_score0001_24ea0.result      146  0.181332      98.56
+4  mut_V157R_score1956_3b835.result      157  0.050039      97.62
+
+
+Spearman: RMSD vs Score: SignificanceResult(statistic=np.float64(-0.8720815992723809), pvalue=np.float64(0.05385421772754211))
+Spearman: pLDDT vs Score: SignificanceResult(statistic=np.float64(0.10259783520851541), pvalue=np.float64(0.8695979205185651))
+
+Among the five mutations analyzed, RMSD exhibited a strong negative correlation with fitness (ρ = -0.87, p ≈ 0.054), suggesting 
+that larger structural deviations may correspond to more disruptive mutations. In contrast, pLDDT at the mutation site showed 
+no meaningful correlation with fitness (ρ = 0.10, p ≈ 0.87), indicating that AlphaFold confidence scores may be less informative 
+for predicting the functional impact of single mutations.
