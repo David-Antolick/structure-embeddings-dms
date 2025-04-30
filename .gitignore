@@ -4,3 +4,5 @@
 *.csv
 *.npy
 *.txt
+
+/af_outs

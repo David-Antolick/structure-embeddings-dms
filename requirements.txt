@@ -8,3 +8,5 @@ scikit-learn
 scipy
 matplotlib
 seaborn
+numpy
+Bio.PD
