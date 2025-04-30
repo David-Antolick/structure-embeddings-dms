@@ -34,7 +34,7 @@ aa3_to_1 = {
 # Apply the conversion
 df["wt_residue"] = df["wt_residue"].map(aa3_to_1)
 df["mutant_residue"] = df["mutant_residue"].map(aa3_to_1)
-
+df = df[df["position"] >= 23]
 
 # Format correctly
 parsed_df = df[["position", "wt_residue", "mutant_residue", "score"]]
