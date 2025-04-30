@@ -18,4 +18,5 @@ Spearman: pLDDT vs Score: SignificanceResult(statistic=np.float64(0.102597835208
 Among the five mutations analyzed, RMSD exhibited a strong negative correlation with fitness (ρ = -0.87, p ≈ 0.054), suggesting 
 that larger structural deviations may correspond to more disruptive mutations. In contrast, pLDDT at the mutation site showed 
 no meaningful correlation with fitness (ρ = 0.10, p ≈ 0.87), indicating that AlphaFold confidence scores may be less informative 
-for predicting the functional impact of single mutations.
+for predicting the functional impact of single mutations. These results also are of only a small sample size, as only 5 mutations
+were selected for alphafold and futher analysis.
